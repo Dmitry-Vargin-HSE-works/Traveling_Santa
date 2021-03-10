@@ -1,16 +1,20 @@
-const points_num = 197768
-
 class path {
     вектор из точек
     длина
 }
 
+Q
+a
+b
+
 best_way = path([...], 1.0 / 0.0)
+const ant_cum = 100;
+const points_num = 197768
+
+paths = path[ant_num] // пути которые прошла партия муравьев
+new first_points = (random point, ... * ant_num)
 
 while (true):
-    const ant_cum = 10;
-    new first_points = (random point, ... * ant_num)
-    new paths = path[ant_num]
     for each i : first_points:
         пройденные_точки = [...];
         пройденные_точки[0] = i
@@ -22,11 +26,8 @@ while (true):
                 1) посмотреть из даты все расстояния и ферамон
                 2) по формуле расчитать вероятности пройти в каждую точку
                 3) выбрать через столбик
-            )
 
-            точка пройдена
-            (
-                пройденные_точки[точка] = true
+                пройденные_точки + точка из (3)
             )
         посчитать длину путь при помощи пройденнх точек
         (
