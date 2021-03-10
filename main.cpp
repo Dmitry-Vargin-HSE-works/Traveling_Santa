@@ -4,11 +4,25 @@
 int main() {
 
     Traveling_Santa ts;
-    ts.readData("cities.csv");
-
-    for (auto p : ts.tmp) {
-        cout << p.first << " " << p.second << "\n";
+    //ts.readData("cities.csv");
+    const int n = 200000;
+    vector<vector<pair<float, float>>> qwe;
+    qwe.resize(n);
+    for (int i = 0; i < n; ++i) {
+        qwe[i].resize(n);
+        for (int j = 0; j < n; ++j) {
+            qwe[i][j].first = 1.0;
+            qwe[i][j].second = 2.0;
+        }
     }
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            cout << qwe[i][j].first << " ";
+        }
+        cout << "\n";
+    }
+
     /*
     Path path(ts.all_points, ts.data);
     for (auto a : path.points)

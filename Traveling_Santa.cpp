@@ -25,12 +25,12 @@ void Traveling_Santa::readData(string file_name) {
     if (file.is_open()) {
         getline(file, tmpS);
         while (getline(file, tmpS)) {
-            cout << tmpS;
             tmpP.first = stof(tmpS.substr(tmpS.find(',')+1, tmpS.rfind(',')));
             tmpP.second = stof(tmpS.substr(tmpS.rfind(',')+1, tmpS.size()));
             this->tmp.push_back(tmpP);
         }
     }
+    cout << "\nsosi\n";
     file.close();
     this->points_num = this->tmp.size();
     this->convertDataToMatrix();
@@ -40,14 +40,22 @@ void Traveling_Santa::readData(string file_name) {
 }
 
 void Traveling_Santa::convertDataToMatrix() {
+    data.resize(this->points_num);
     for (int i = 0; i < this->points_num; ++i) {
-        vector<pair<float, float>> v;
-        data.push_back(v);
+        if (i % 10000 == 0)
+            cout << "HUI\n";
+        // vector<pair<float, float>> v;
+        //data.push_back(v);
+        data[i].resize(this->points_num);
         for (int j = 0; j < this->points_num; ++j) {
-            pair<float, float> p;
-            data[i].push_back(p);
-            data[i][j].first = sqrt(abs(tmp[i].first * tmp[i].second - tmp[j].first * tmp[j].second));
+            //pair<float, float> p;
+            //data[i].push_back(p);
+            data[i][j].first = 2.0f;
+            //data[i][j].first = sqrt(pow(tmp[i].first - tmp[j].first, 2) + pow(tmp[i].second - tmp[j].second, 2));
             data[i][j].second = 1.0f;
         }
     }
+    vector<pair<float, float>> f;
+    this->tmp = f;
+    cout << "convertDataToMatrix\n";
 }
