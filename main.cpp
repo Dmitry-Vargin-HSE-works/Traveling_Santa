@@ -2,11 +2,18 @@
 #include "Traveling_Santa.h"
 
 int main() {
-    Path path;
-    cout << (path.size == 1.0 / 0.0);
-    path.points.push_back(234);
+
+    Traveling_Santa ts;
+    ts.readData("cities.csv");
+
+    for (auto p : ts.tmp) {
+        cout << p.first << " " << p.second << "\n";
+    }
+    /*
+    Path path(ts.all_points, ts.data);
     for (auto a : path.points)
-        cout << a;
+        cout << a << " ";
+*/
     /*
     srand(time(nullptr));
     vector<vector<float>> v;
@@ -48,7 +55,6 @@ int main() {
         }
         cout << "\n";
     }
-    return 0;
      */
-
+    return 0;
 }

@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <cmath>
+#include <fstream>
 
 using namespace std;
 
@@ -20,18 +21,18 @@ public:
     const int ant_num = 100; // количество проходов за одну итерацию
     int points_num; // количество точек // после считывания будет 197768
 
+    vector<int> all_points; // чтоб копировать в непройденные точки
+
     Path best_way();
 
     vector<pair<float, float>> tmp;
-    vector<vector<pair<float, float>>> data;
+    vector<vector<pair<float, float>>> data; // pair(len, pheromone)
 
-    void readData(int row_num);
+    void readData(string file_name);
     Path runAlgorithm();         //// TODO: D
 
 
 private:
-    vector<int> all_points; // чтоб копировать в непройденные точки
-
     vector<Path> paths; // пути пройденные за время итераций
     vector<int> first_points; // первые точки для в итерации
 
@@ -63,14 +64,17 @@ public:
         this->points = {};
     }
 
-    Path(vector<int> ps) {
+    Path(vector<int> ps, vector<vector<pair<float, float>>> data) {
         this->points = ps;
-        this->size = this->getLength();
+        this->size = this->getLength(data);
     }
 
-    double getLength() {                //// TODO: D
+    double getLength(vector<vector<pair<float, float>>> data) {                //// TODO: D
         if (this->size == 1.0 / 0.0) {
-            //
+            double tmp_size = 0.0;
+            for (int i = 0; i < this->points.size() - 1; ++i) {
+                tmp_size += data[points[i]][points[i+1]].first;
+            }
         }
         return this->size;
     };
