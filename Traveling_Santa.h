@@ -26,7 +26,7 @@ public:
     vector<vector<pair<float, float>>> data;
 
     void readData(int row_num);
-    Path runAlgorithm();         //// TODO
+    Path runAlgorithm();         //// TODO: D
 
 
 private:
@@ -41,15 +41,15 @@ private:
     void convertDataToMatrix();
 
     // Функции для прохождения в следующую точку
-    void goToNextPoint(); //// TODO
-    vector<pair<float, float>> getDistanceAndPheromone(); ////TODO
-    vector<float> probabilityToPoints(vector<pair<float, float>> stats); ////TODO
-    int randomPoint(vector<float>); ////TODO
+    void goToNextPoint(); //// TODO : K
+    vector<pair<float, float>> getDistanceAndPheromone(); ////TODO : K
+    vector<float> probabilityToPoints(vector<pair<float, float>> stats); ////TODO : K
+    int randomPoint(vector<float>); ////TODO : K
 
 
-    void setBestWay(Path path); //// TODO
+    void setBestWay(Path path); //// TODO: D
 
-    void updatePheromone(); ////TODO
+    void updatePheromone(); ////TODO: D
 };
 
 
@@ -68,7 +68,7 @@ public:
         this->size = this->getLength();
     }
 
-    double getLength() {                //// TODO
+    double getLength() {                //// TODO: D
         if (this->size == 1.0 / 0.0) {
             //
         }
