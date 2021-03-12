@@ -30,11 +30,15 @@ public:
     vector<vector<pair<float, float>>> data; // pair(len, pheromone)
 
     void readData(string file_name);
-    Path runAlgorithm();         //// TODO: D
+    Path runAlgorithm();         //// D
 
 
-private:
+
     vector<Path> paths; // пути пройденные за время итераций
+
+    void updatePheromone(); ////TODO: D
+private:
+
     vector<int> first_points; // первые точки для в итерации
 
     vector<int> passed_points;
@@ -52,7 +56,7 @@ private:
 
     void setBestWay(Path path); //// D
 
-    void updatePheromone(); ////TODO: D
+
 };
 
 

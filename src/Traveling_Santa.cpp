@@ -35,6 +35,7 @@ void Traveling_Santa::readData(string file_name) {
         this->all_points[i] = i;
     }
     this->convertDataToMatrix();
+    this->tmp.resize(0);
 }
 
 void Traveling_Santa::convertDataToMatrix() {
@@ -64,7 +65,7 @@ Path Traveling_Santa::runAlgorithm() {
         this->paths.resize(0);
         for (int i : this->first_points) {
             while (!this->not_passed_points.empty()) {
-                this->goToNextPoint();
+                //this->goToNextPoint();
             }
             Path tmp_path(this->passed_points, this->data);
             this->paths.push_back(tmp_path);
@@ -73,4 +74,21 @@ Path Traveling_Santa::runAlgorithm() {
         this->updatePheromone();
         break;
     }
+    return this->best_way;
+}
+
+void Traveling_Santa::updatePheromone() {
+    for (auto & i : this->data) {
+        for (auto & j : i) {
+            j.second *= this->p;
+        }
+    }
+
+    for (Path& path : this->paths) {
+        float add = (float) this->q / (float) path.size;
+        for (int i = 0; i < path.points.size()-1; ++i) {
+            this->data[i][i+1].second += add;
+        }
+    }
+
 }
