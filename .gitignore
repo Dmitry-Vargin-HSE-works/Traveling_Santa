@@ -1,5 +1,5 @@
 .idea
 cmake-build-debug
-data
+data/sample_submission.csv
 
 main.cpp
