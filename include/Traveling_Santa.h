@@ -7,10 +7,11 @@
 #include <map>
 #include <cmath>
 #include <fstream>
+#include <filesystem>
+
+#include "../include/Path.h"
 
 using namespace std;
-
-class Path;
 
 class Traveling_Santa {
 public:
@@ -23,7 +24,7 @@ public:
 
     vector<int> all_points; // чтоб копировать в непройденные точки
 
-    Path best_way();
+    Path best_way;
 
     vector<pair<float, float>> tmp;
     vector<vector<pair<float, float>>> data; // pair(len, pheromone)
@@ -43,42 +44,15 @@ private:
 
     // Функции для прохождения в следующую точку
     void goToNextPoint(); //// TODO : K
+
     vector<pair<float, float>> getDistanceAndPheromone(); ////TODO : K
     vector<float> probabilityToPoints(vector<pair<float, float>> stats); ////TODO : K
     int randomPoint(vector<float>); ////TODO : K
 
 
-    void setBestWay(Path path); //// TODO: D
+    void setBestWay(Path path); //// D
 
     void updatePheromone(); ////TODO: D
-};
-
-
-
-class Path {
-public:
-    vector<int> points;
-    double size = 1.0 / 0.0;
-
-    Path() {
-        this->points = {};
-    }
-
-    Path(vector<int> ps, vector<vector<pair<float, float>>> data) {
-        this->points = ps;
-        this->size = this->getLength(data);
-    }
-
-    double getLength(vector<vector<pair<float, float>>> data) {                //// TODO: D
-        if (this->size == 1.0 / 0.0) {
-            double tmp_size = 0.0;
-            for (int i = 0; i < this->points.size() - 1; ++i) {
-                tmp_size += data[points[i]][points[i+1]].first;
-            }
-        }
-        return this->size;
-    };
-
 };
 
 

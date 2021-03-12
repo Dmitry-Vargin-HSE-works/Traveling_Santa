@@ -1,5 +1,4 @@
-#include "Traveling_Santa.h"
-#include "filesystem"
+#include "../include/Traveling_Santa.h"
 
 #ifdef __unix__
 string slash = "/";
@@ -30,10 +29,12 @@ void Traveling_Santa::readData(string file_name) {
     }
     file.close();
     this->points_num = this->tmp.size();
-    this->convertDataToMatrix();
-    for (int i = 0; i < this->tmp.size(); ++i) {
-        this->all_points.push_back(i);
+    this->all_points.resize(this->points_num);
+    this->first_points.resize(this->ant_num);
+    for (int i = 0; i < this->points_num; ++i) {
+        this->all_points[i] = i;
     }
+    this->convertDataToMatrix();
 }
 
 void Traveling_Santa::convertDataToMatrix() {
@@ -47,4 +48,29 @@ void Traveling_Santa::convertDataToMatrix() {
     }
     vector<pair<float, float>> f;
     this->tmp = f;
+}
+
+void Traveling_Santa::setBestWay(Path path) {
+    if (path.size < this->best_way.size) {
+        best_way = path;
+    }
+}
+
+Path Traveling_Santa::runAlgorithm() {
+    while (true) {
+        for (int i = 0; i < this->ant_num; ++i) {
+            this->first_points[i] = rand() % this->points_num;
+        }
+        this->paths.resize(0);
+        for (int i : this->first_points) {
+            while (!this->not_passed_points.empty()) {
+                this->goToNextPoint();
+            }
+            Path tmp_path(this->passed_points, this->data);
+            this->paths.push_back(tmp_path);
+            this->setBestWay(this->paths[this->paths.size() - 1]);
+        }
+        this->updatePheromone();
+        break;
+    }
 }
