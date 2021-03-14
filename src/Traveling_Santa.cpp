@@ -92,3 +92,41 @@ void Traveling_Santa::updatePheromone() {
     }
 
 }
+
+//// K
+
+int Traveling_Santa::randomPoint(vector<float> probability_roulette) {
+  int next_point = 0;
+  float choice = static_cast <float> (rand()) / static_cast <float> (RAND_MAX / (1.0 - 0.0));
+  while (probability_roulette[next_point] > choice) {
+    ++next_point;
+  }
+  return next_point;
+}
+
+void Traveling_Santa::goToNextPoint(int current_point) {
+  vector<float> probability_roulette;
+
+  float overall_probability = 0;
+  for (int i = 0; i < points_num; ++i) {
+    if (current_point != i) {
+      overall_probability += probabilityToPoints(current_point, i);
+    }
+  }
+
+  for (int i = 0; i < points_num; ++i) {
+    if (current_point != i) {
+      float individual_probability = probabilityToPoints(current_point, i) / overall_probability;
+      probability_roulette.push_back(individual_probability);
+    }
+  }
+
+  randomPoint(probability_roulette);
+}
+
+float Traveling_Santa::probabilityToPoints(int current_point, int next_point) {
+  float probability_to_points;
+  probability_to_points = pow(data[current_point][next_point].second, a)
+                          * pow(data[current_point][next_point].first, b);
+  return probability_to_points;
+}

@@ -47,17 +47,12 @@ private:
     void convertDataToMatrix();
 
     // Функции для прохождения в следующую точку
-    void goToNextPoint(); //// TODO : K
-
-    vector<pair<float, float>> getDistanceAndPheromone(); ////TODO : K
-    vector<float> probabilityToPoints(vector<pair<float, float>> stats); ////TODO : K
-    int randomPoint(vector<float>); ////TODO : K
+    int randomPoint(vector<float> probability_to_points); //// K
+    void goToNextPoint(int current_point); //// K
+    float probabilityToPoints(int current_point, int next_point); //// K
 
 
     void setBestWay(Path path); //// D
-
-
 };
-
 
 #endif //TRAVELING_SANTA_TRAVELING_SANTA_H
