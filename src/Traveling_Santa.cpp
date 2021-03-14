@@ -64,6 +64,9 @@ Path Traveling_Santa::runAlgorithm() {
         }
         this->paths.resize(0);
         for (int i : this->first_points) {
+            this->passed_points.erase(this->passed_points.begin(), this->passed_points.end());
+            this->passed_points.resize(this->data.size());
+            this->not_passed_points = this->all_points;
             while (!this->not_passed_points.empty()) {
                 //this->goToNextPoint();
             }
