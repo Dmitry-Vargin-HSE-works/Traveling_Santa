@@ -130,7 +130,7 @@ void Traveling_Santa::goToNextPoint(int current_point) {
       ++index;
     }
   }
-  passed_points.erase(passed_points.begin() + index);
+  not_passed_points.erase(passed_points.begin() + index);
 }
 
 float Traveling_Santa::probabilityToPoints(int current_point, int next_point) {
