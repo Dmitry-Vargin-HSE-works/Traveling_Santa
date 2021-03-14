@@ -32,8 +32,6 @@ public:
     void readData(string file_name);
     Path runAlgorithm();         //// D
 
-
-
     vector<Path> paths; // пути пройденные за время итераций
 
     void updatePheromone(); ////TODO: D

@@ -64,18 +64,18 @@ Path Traveling_Santa::runAlgorithm() {
         }
         this->paths.resize(0);
         for (int i : this->first_points) {
-            this->passed_points.erase(this->passed_points.begin(), this->passed_points.end());
+            this->passed_points.resize(0);
             this->passed_points.resize(this->data.size());
             this->not_passed_points = this->all_points;
             while (!this->not_passed_points.empty()) {
-                //this->goToNextPoint();
+                this->goToNextPoint(i);
             }
             Path tmp_path(this->passed_points, this->data);
             this->paths.push_back(tmp_path);
             this->setBestWay(this->paths[this->paths.size() - 1]);
+            this->best_way.printPath();
         }
         this->updatePheromone();
-        break;
     }
     return this->best_way;
 }

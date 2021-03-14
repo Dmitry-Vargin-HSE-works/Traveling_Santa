@@ -36,6 +36,13 @@ public:
         return this->size;
     };
 
+    void printPath() {
+        cout << this->size << "\n[";
+        for (auto x: this->points) {
+            cout << x << ", ";
+        }
+        cout << "]\n\n";
+    };
 };
 
 #endif //TRAVELING_SANTA_PATH_H
