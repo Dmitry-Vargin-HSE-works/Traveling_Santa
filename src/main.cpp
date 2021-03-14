@@ -2,7 +2,7 @@
 #include "../include/Traveling_Santa.h"
 
 int main() {
-    srand(time(nullptr));
+    srand(static_cast <unsigned> (NULL));
     Traveling_Santa ts;
     ts.readData("cities.csv");
     Path path(ts.all_points, ts.data);
