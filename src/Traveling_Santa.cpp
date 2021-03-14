@@ -121,7 +121,16 @@ void Traveling_Santa::goToNextPoint(int current_point) {
     }
   }
 
-  randomPoint(probability_roulette);
+  int next_point = randomPoint(probability_roulette);
+  passed_points.push_back(next_point);
+
+  int index = 0;
+  for (auto vector : all_points) {
+    if (vector != next_point) {
+      ++index;
+    }
+  }
+  passed_points.erase(passed_points.begin() + index);
 }
 
 float Traveling_Santa::probabilityToPoints(int current_point, int next_point) {
