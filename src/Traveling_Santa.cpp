@@ -59,7 +59,7 @@ void Traveling_Santa::setBestWay(Path path) {
 }
 
 Path Traveling_Santa::runAlgorithm() {
-    while (true) {
+ //   while (true) {
         for (int i = 0; i < this->ant_num; ++i) {
             this->first_points[i] = rand() % this->points_num;
         }
@@ -69,7 +69,7 @@ Path Traveling_Santa::runAlgorithm() {
             this->passed_points[0] = i;
             this->not_passed_points = this->all_points;
             while (!this->not_passed_points.empty()) {
-                this->goToNextPoint(i);
+                this->goToNextPoint(); //// TODO: fix
             }
             Path tmp_path(this->passed_points, this->data);
             this->paths.push_back(tmp_path);
@@ -77,11 +77,9 @@ Path Traveling_Santa::runAlgorithm() {
             this->best_way.printPath();
         }
         this->updatePheromone();
-    }
+//    }
     return this->best_way;
 }
-
-
 
 void Traveling_Santa::updatePheromone() {
     for (auto & i : this->data) {
@@ -99,40 +97,49 @@ void Traveling_Santa::updatePheromone() {
 
 }
 
-//// K
-
 int Traveling_Santa::randomPoint(vector<float> probability_roulette) {
   int next_point = 0;
   float choice = static_cast <float> (rand()) / static_cast <float> (RAND_MAX / (1.0 - 0.0));
-  while (probability_roulette[next_point] > choice) {
-    ++next_point;
-  }
-  return next_point;
-}
 
-void Traveling_Santa::goToNextPoint(int current_point) {
-  vector<float> probability_roulette;
-
-  float overall_probability = 0;
-  for (int i = 0; i < points_num; ++i) {
-    if (current_point != i) {
-      overall_probability += probabilityToPoints(current_point, i);
+  float sum = 0;
+  for (float i : probability_roulette) {
+    if (sum < choice) {
+      sum += i;
+      ++next_point;
     }
   }
 
-  for (int i = 0; i < points_num; ++i) {
-    if (current_point != i) {
-      float individual_probability = probabilityToPoints(current_point, i) / overall_probability;
+  return next_point;
+}
+
+void Traveling_Santa::goToNextPoint() {
+  int current_point = passed_points[passed_points.size() - 1]; // текущая точка
+  vector<float> probability_roulette; // "рулетка выбора"
+
+  // считаем общую вероятность из числа НЕПРОЙДЕННЫХ
+  float overall_probability = 0;
+  for (auto id : not_passed_points) {
+    if (current_point != id) {
+      overall_probability += probabilityToPoints(current_point, id);
+    }
+  }
+
+  // генерируем "рулетку выбора"
+  for (auto id : not_passed_points) {
+    if (current_point != id) {
+      float individual_probability = probabilityToPoints(current_point, id) / overall_probability;
       probability_roulette.push_back(individual_probability);
     }
   }
 
+  // добавляем в пройденные
   int next_point = randomPoint(probability_roulette);
-  passed_points.push_back(next_point);
+  passed_points.push_back(not_passed_points[next_point]);
 
+  // удаляем из непройденных
   vector<int>::iterator iterator;
   iterator = not_passed_points.begin();
-  for (auto vector : all_points) {
+  for (auto vector : not_passed_points) {
     if (vector != next_point) {
       iterator++;
     } else break;

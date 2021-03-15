@@ -46,7 +46,7 @@ private:
 
     // Функции для прохождения в следующую точку
     int randomPoint(vector<float> probability_to_points); //// K
-    void goToNextPoint(int current_point); //// K
+    void goToNextPoint(); //// K
     float probabilityToPoints(int current_point, int next_point); //// K
 
 
