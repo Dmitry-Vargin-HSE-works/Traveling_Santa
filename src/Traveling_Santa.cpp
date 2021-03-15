@@ -53,7 +53,8 @@ void Traveling_Santa::convertDataToMatrix() {
 
 void Traveling_Santa::setBestWay(Path path) {
     if (path.size < this->best_way.size) {
-        best_way = path;
+        best_way.points = path.points;
+        best_way.size = path.size;
     }
 }
 
@@ -64,8 +65,8 @@ Path Traveling_Santa::runAlgorithm() {
         }
         this->paths.resize(0);
         for (int i : this->first_points) {
-            this->passed_points.resize(0);
-            this->passed_points.resize(this->data.size());
+            this->passed_points.resize(1);
+            this->passed_points[0] = i;
             this->not_passed_points = this->all_points;
             while (!this->not_passed_points.empty()) {
                 this->goToNextPoint(i);
@@ -79,6 +80,8 @@ Path Traveling_Santa::runAlgorithm() {
     }
     return this->best_way;
 }
+
+
 
 void Traveling_Santa::updatePheromone() {
     for (auto & i : this->data) {
