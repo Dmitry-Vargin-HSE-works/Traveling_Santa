@@ -65,7 +65,6 @@ Path Traveling_Santa::runAlgorithm() {
         for (int i = 0; i < this->ant_num; ++i) {
             this->first_points[i] = rand() % this->points_num;
         }
-        Path(first_points, data).printPath();
         this->paths.resize(0);
         for (int i : this->first_points) {
             this->passed_points.resize(1);
@@ -79,7 +78,7 @@ Path Traveling_Santa::runAlgorithm() {
             }
             not_passed_points.erase(not_passed_points.begin() + ind);
             while (!this->not_passed_points.empty()) {
-                this->goToNextPoint(); //// TODO: fix
+                this->goToNextPoint();
             }
             Path tmp_path(this->passed_points, this->data);
             this->paths.push_back(tmp_path);
