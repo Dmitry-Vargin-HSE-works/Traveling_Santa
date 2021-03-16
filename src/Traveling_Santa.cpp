@@ -106,40 +106,20 @@ void Traveling_Santa::updatePheromone() {
 
 }
 
-int Traveling_Santa::randomPoint(vector<float> probability_roulette) {
-  int next_point = 0;
-  float choice = static_cast <float> (rand()) / static_cast <float> (RAND_MAX / (1.0 - 0.0));
-
-  float sum = 0;
-  for (float i : probability_roulette) {
-    if (sum < choice) {
-      sum += i;
-      ++next_point;
-    }
-  }
-
-  return next_point;
-}
-
 void Traveling_Santa::goToNextPoint() {
   int current_point = passed_points[passed_points.size() - 1]; // текущая точка
-  vector<float> probability_roulette; // "рулетка выбора"
 
   // считаем общую вероятность из числа НЕПРОЙДЕННЫХ
   float overall_probability = 0;
-  for (auto id : not_passed_points) {
-    if (current_point != id) {
-      overall_probability += probabilityToPoints(current_point, id);
-    }
+  for (int next_point : not_passed_points) {
+    overall_probability += probabilityToPoints(current_point, next_point);
   }
 
   // генерируем "рулетку выбора"
-  float individual_probability;
-  for (auto id : not_passed_points) {
-    if (current_point != id) {
-      individual_probability = probabilityToPoints(current_point, id) / overall_probability;
-      probability_roulette.push_back(individual_probability);
-    }
+  vector<float> probability_roulette; // "рудетка выбора"
+  probability_roulette.reserve(not_passed_points.size());
+  for (int next_point : not_passed_points) {
+    probability_roulette.push_back(probabilityToPoints(current_point, next_point) / overall_probability);
   }
 
   // добавляем в пройденные
@@ -147,17 +127,25 @@ void Traveling_Santa::goToNextPoint() {
   passed_points.push_back(not_passed_points[next_point]);
 
   // удаляем из непройденных
-  int ind = 0;
-    for (int j = 0; j < this->not_passed_points.size(); ++j) {
-        if (passed_points[ind] == next_point)
-            ind = j;
-    }
-    not_passed_points.erase(not_passed_points.begin() + ind);
+  not_passed_points.erase(not_passed_points.begin() + next_point);
+}
+
+int Traveling_Santa::randomPoint(const vector<float>& probability_roulette) {
+  int next_point = 0;
+  float choice = static_cast <float> (rand()) / static_cast <float> (RAND_MAX / (1.0 - 0.0));
+  float sum = 0;
+
+  for (float value : probability_roulette) {
+    if (sum < choice) {
+      sum += value;
+      ++next_point;
+    } else break;
+  }
+
+  return next_point == probability_roulette.size() ? --next_point : next_point;
 }
 
 float Traveling_Santa::probabilityToPoints(int current_point, int next_point) {
-  float probability_to_points;
-  probability_to_points = pow(data[current_point][next_point].second, a)
-                          * pow(data[current_point][next_point].first, b);
-  return probability_to_points;
+  return pow(data[current_point][next_point].second, a)
+          * pow(data[current_point][next_point].first, b);
 }

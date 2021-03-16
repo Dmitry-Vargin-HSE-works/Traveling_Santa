@@ -35,7 +35,7 @@ public:
     vector<Path> paths; // пути пройденные за время итераций
 
     void updatePheromone(); ////TODO: D
-//private:
+private:
 
     vector<int> first_points; // первые точки для в итерации
 
@@ -45,7 +45,7 @@ public:
     void convertDataToMatrix();
 
     // Функции для прохождения в следующую точку
-    int randomPoint(vector<float> probability_to_points); //// K
+    int randomPoint(const vector<float>& probability_roulette); //// K
     void goToNextPoint(); //// K
     float probabilityToPoints(int current_point, int next_point); //// K
 
