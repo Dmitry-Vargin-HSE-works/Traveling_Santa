@@ -29,8 +29,8 @@ public:
     vector<pair<float, float>> tmp;
     vector<vector<pair<float, float>>> data; // pair(len, pheromone)
 
-    void readData(string file_name);
-    Path runAlgorithm();         //// D
+    void readData(const string& file_name);
+  [[noreturn]] Path runAlgorithm();         //// D
 
     vector<Path> paths; // пути пройденные за время итераций
 
@@ -45,12 +45,12 @@ private:
     void convertDataToMatrix();
 
     // Функции для прохождения в следующую точку
-    int randomPoint(const vector<float>& probability_roulette); //// K
+    static int randomPoint(const vector<float>& probability_roulette); //// K
     void goToNextPoint(); //// K
     float probabilityToPoints(int current_point, int next_point); //// K
 
 
-    void setBestWay(Path path); //// D
+    void setBestWay(const Path& path); //// D
 };
 
 #endif //TRAVELING_SANTA_TRAVELING_SANTA_H

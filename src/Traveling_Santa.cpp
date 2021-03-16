@@ -12,10 +12,9 @@ string slash = "\\";
 
 namespace fs = std::filesystem;
 
-void Traveling_Santa::readData(string file_name) {
+void Traveling_Santa::readData(const string& file_name) {
     string tmpS;
     pair<float, float> tmpP;
-    float x, y;
     string path = fs::current_path().string();
     path = path.substr(0, path.rfind(slash)) + slash + "data" + slash + file_name;
     ifstream file(path);
@@ -51,7 +50,7 @@ void Traveling_Santa::convertDataToMatrix() {
     this->tmp = f;
 }
 
-void Traveling_Santa::setBestWay(Path path) {
+void Traveling_Santa::setBestWay(const Path& path) {
     if (path.size < this->best_way.size) {
         best_way.points = path.points;
         best_way.size = path.size;
@@ -59,13 +58,12 @@ void Traveling_Santa::setBestWay(Path path) {
     }
 }
 
-Path Traveling_Santa::runAlgorithm() {
-    srand(time(NULL));
+[[noreturn]] Path Traveling_Santa::runAlgorithm() {
+    srand(time(nullptr));
     while (true) {
         for (int i = 0; i < this->ant_num; ++i) {
             this->first_points[i] = rand() % this->points_num;
         }
-        Path(first_points, data).printPath();
         this->paths.resize(0);
         for (int i : this->first_points) {
             this->passed_points.resize(1);
@@ -74,12 +72,14 @@ Path Traveling_Santa::runAlgorithm() {
             this->not_passed_points = this->all_points;
             int ind = 0;
             for (int j = 0; j < this->not_passed_points.size(); ++j) {
-                if (passed_points[ind] == passed_points[0])
-                    ind = j;
+                if (not_passed_points[j] == passed_points[0]) {
+                  ind = j;
+                  break;
+                }
             }
             not_passed_points.erase(not_passed_points.begin() + ind);
             while (!this->not_passed_points.empty()) {
-                this->goToNextPoint(); //// TODO: fix
+                this->goToNextPoint();
             }
             Path tmp_path(this->passed_points, this->data);
             this->paths.push_back(tmp_path);
@@ -87,7 +87,7 @@ Path Traveling_Santa::runAlgorithm() {
         }
         this->updatePheromone();
     }
-    return this->best_way;
+    // return this->best_way;
 }
 
 void Traveling_Santa::updatePheromone() {
@@ -116,7 +116,7 @@ void Traveling_Santa::goToNextPoint() {
   }
 
   // генерируем "рулетку выбора"
-  vector<float> probability_roulette; // "рудетка выбора"
+  vector<float> probability_roulette; // "рулетка выбора"
   probability_roulette.reserve(not_passed_points.size());
   for (int next_point : not_passed_points) {
     probability_roulette.push_back(probabilityToPoints(current_point, next_point) / overall_probability);
