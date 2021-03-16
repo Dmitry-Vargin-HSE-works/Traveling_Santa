@@ -31,13 +31,13 @@ public:
             for (int i = 0; i < this->points.size() - 1; ++i) {
                 tmp_size += data[points[i]][points[i+1]].first;
             }
-            this->size = tmp_size;
+            this->size = tmp_size + data[points[points[points.size()-1]]][points[0]].first;
         }
         return this->size;
     };
 
     void printPath() {
-        cout << std::fixed << this->size << "\n[";
+        cout << std::fixed << this->size << " " << this->points.size() << "\n[";
         for (auto x: this->points) { cout << x << ", "; }
 
         cout << "]\n\n";

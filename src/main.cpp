@@ -7,5 +7,6 @@ int main() {
     Traveling_Santa ts;
     ts.readData("cities.csv");
     ts.runAlgorithm();
-     return 0;
+
+    return 0;
 }

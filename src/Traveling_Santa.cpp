@@ -67,17 +67,20 @@ Path Traveling_Santa::runAlgorithm() {
         }
         this->paths.resize(0);
         for (int i : this->first_points) {
-            this->passed_points.resize(1);
-            this->passed_points[0] = i;
+            this->passed_points.resize(0);
+            this->passed_points.push_back(i);
 
             this->not_passed_points = this->all_points;
-            int ind = 0;
-            for (int j = 0; j < this->not_passed_points.size(); ++j) {
-                if (passed_points[ind] == passed_points[0])
-                    ind = j;
+            int j = 0;
+            for (j = 0; j < this->not_passed_points.size(); ++j) {
+                if (not_passed_points[j] == i) {
+                    break;
+                }
             }
-            not_passed_points.erase(not_passed_points.begin() + ind);
+            not_passed_points.erase(not_passed_points.begin() + j);
             while (!this->not_passed_points.empty()) {
+                //Path(this->passed_points, this->data).printPath();
+                //Path(this->not_passed_points, this->data).printPath();
                 this->goToNextPoint(); //// TODO: fix
             }
             Path tmp_path(this->passed_points, this->data);
@@ -107,7 +110,7 @@ void Traveling_Santa::updatePheromone() {
 
 int Traveling_Santa::randomPoint(vector<float> probability_roulette) {
   int next_point = 0;
-  float choice = static_cast <float> (rand()) / static_cast <float> (RAND_MAX / (1.0 - 0.0));
+  float choice = 1.0 * rand() / RAND_MAX;
 
   float sum = 0;
   for (float i : probability_roulette) {
@@ -130,12 +133,13 @@ void Traveling_Santa::goToNextPoint() {
     int new_point = this->getRandomPoint(chances);
 
     this->passed_points.push_back(new_point);
-    for (int i = 0; i < this->not_passed_points.size(); ++i) {
+    int i;
+    for (i = 0; i < this->not_passed_points.size(); ++i) {
         if (this->not_passed_points[i] == new_point) {
-            this->not_passed_points.erase(this->not_passed_points.begin() + i);
             break;
         }
     }
+    this->not_passed_points.erase(this->not_passed_points.begin() + i);
 }
 
 vector<float> Traveling_Santa::getChances(int last_point) {
@@ -144,33 +148,31 @@ vector<float> Traveling_Santa::getChances(int last_point) {
     for (auto i : this->passed_points) {
         chances[i] = 0.0f;
     }
+    int c = 0;
     for (auto i : this->not_passed_points) {
-        chances[i] = pow(this->data[last_point][i].second, this->a) /
-                pow(this->data[last_point][i].first, this->b);
+        chances[i] = pow(this->data[last_point][i].second, this->a) / pow(this->data[last_point][i].first, this->b);
         sum += chances[i];
     }
-    for (float & chance : chances) {
-        chance /= sum;
+    // double tmp_sum = 0.0; for (int i = 0; i < chances.size(); ++i) { cout << i << ") " << pow(this->data[last_point][i].second, this->b) << " / " <<  pow(this->data[last_point][i].first, this->b) << " = " << chances[i] << " " << tmp_sum << " " << sum << "\n"; }
+    for (int i = 0; i < chances.size(); ++i) {
+        chances[i] /= sum;
     }
     return chances;
 }
 
 int Traveling_Santa::getRandomPoint(vector<float> chances) {
     float rand_value = 1.0 * rand() / RAND_MAX;
-    for (int i = 0; i < chances.size(); ++i) {
+    for (int i = chances.size()-1; i >= 0; --i) {
         for (int j = 0; j < i; ++j) {
             chances[i] += chances[j];
         }
     }
-    if (rand_value <= chances[0]) {
-        return 0;
-    }
-    for (int i = 0; i < chances.size()-1; ++i) {
-        if (chances[i] < rand_value && rand_value <= chances[i+1])
-            return i+1;
+
+    for (int i = 0; i < chances.size(); ++i) {
+        if (rand_value <= chances[i])
+            return i;
     }
     return 0;
-    throw "Point was not found!";
 }
 
 /*
