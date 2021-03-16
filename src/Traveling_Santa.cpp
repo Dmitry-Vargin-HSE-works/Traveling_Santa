@@ -59,7 +59,7 @@ void Traveling_Santa::setBestWay(Path path) {
 }
 
 Path Traveling_Santa::runAlgorithm() {
-  while (true) {
+ //// while (true) {
         for (int i = 0; i < this->ant_num; ++i) {
             this->first_points[i] = rand() % this->points_num;
         }
@@ -68,6 +68,13 @@ Path Traveling_Santa::runAlgorithm() {
             this->passed_points.resize(1);
             this->passed_points[0] = i;
             this->not_passed_points = this->all_points;
+            auto iterator = not_passed_points.begin();
+            for (auto value : not_passed_points) {
+              if (value != i) {
+                iterator++;
+             } else break;
+            }
+            not_passed_points.erase(iterator);
             while (!this->not_passed_points.empty()) {
                 this->goToNextPoint(); //// TODO: fix
             }
@@ -77,7 +84,7 @@ Path Traveling_Santa::runAlgorithm() {
             this->best_way.printPath();
         }
         this->updatePheromone();
-    }
+ ////   }
     return this->best_way;
 }
 
@@ -137,14 +144,22 @@ void Traveling_Santa::goToNextPoint() {
   passed_points.push_back(not_passed_points[next_point]);
 
   // удаляем из непройденных
-  vector<int> copy = not_passed_points;
+ /* vector<int> copy = not_passed_points;
   not_passed_points.clear();
   not_passed_points.reserve(copy.size());
   for (int & value : copy) {
     if (value != next_point) {
       not_passed_points.push_back(value);
     }
-  }
+  }*/
+ //// основной способ
+ auto iterator = not_passed_points.begin();
+ for (auto value : not_passed_points) {
+   if (value != next_point) {
+     iterator++;
+   } else break;
+ }
+ not_passed_points.erase(iterator);
 }
 
 float Traveling_Santa::probabilityToPoints(int current_point, int next_point) {
