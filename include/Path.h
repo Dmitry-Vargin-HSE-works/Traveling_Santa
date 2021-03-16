@@ -37,10 +37,9 @@ public:
     };
 
     void printPath() {
-        cout << this->size << "\n[";
-        for (auto x: this->points) {
-            cout << x << ", ";
-        }
+        cout << std::fixed << this->size << "\n[";
+        for (auto x: this->points) { cout << x << ", "; }
+
         cout << "]\n\n";
     };
 };

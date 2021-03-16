@@ -55,36 +55,38 @@ void Traveling_Santa::setBestWay(Path path) {
     if (path.size < this->best_way.size) {
         best_way.points = path.points;
         best_way.size = path.size;
+        this->best_way.printPath();
     }
 }
 
 Path Traveling_Santa::runAlgorithm() {
- //// while (true) {
+    srand(time(NULL));
+    while (true) {
         for (int i = 0; i < this->ant_num; ++i) {
             this->first_points[i] = rand() % this->points_num;
         }
+        Path(first_points, data).printPath();
         this->paths.resize(0);
         for (int i : this->first_points) {
             this->passed_points.resize(1);
             this->passed_points[0] = i;
+
             this->not_passed_points = this->all_points;
-            auto iterator = not_passed_points.begin();
-            for (auto value : not_passed_points) {
-              if (value != i) {
-                iterator++;
-             } else break;
+            int ind = 0;
+            for (int j = 0; j < this->not_passed_points.size(); ++j) {
+                if (passed_points[ind] == passed_points[0])
+                    ind = j;
             }
-            not_passed_points.erase(iterator);
+            not_passed_points.erase(not_passed_points.begin() + ind);
             while (!this->not_passed_points.empty()) {
                 this->goToNextPoint(); //// TODO: fix
             }
             Path tmp_path(this->passed_points, this->data);
             this->paths.push_back(tmp_path);
             this->setBestWay(this->paths[this->paths.size() - 1]);
-            this->best_way.printPath();
         }
         this->updatePheromone();
- ////   }
+    }
     return this->best_way;
 }
 
@@ -132,9 +134,10 @@ void Traveling_Santa::goToNextPoint() {
   }
 
   // генерируем "рулетку выбора"
+  float individual_probability;
   for (auto id : not_passed_points) {
     if (current_point != id) {
-      float individual_probability = probabilityToPoints(current_point, id) / overall_probability;
+      individual_probability = probabilityToPoints(current_point, id) / overall_probability;
       probability_roulette.push_back(individual_probability);
     }
   }
@@ -144,22 +147,12 @@ void Traveling_Santa::goToNextPoint() {
   passed_points.push_back(not_passed_points[next_point]);
 
   // удаляем из непройденных
- /* vector<int> copy = not_passed_points;
-  not_passed_points.clear();
-  not_passed_points.reserve(copy.size());
-  for (int & value : copy) {
-    if (value != next_point) {
-      not_passed_points.push_back(value);
+  int ind = 0;
+    for (int j = 0; j < this->not_passed_points.size(); ++j) {
+        if (passed_points[ind] == next_point)
+            ind = j;
     }
-  }*/
- //// основной способ
- auto iterator = not_passed_points.begin();
- for (auto value : not_passed_points) {
-   if (value != next_point) {
-     iterator++;
-   } else break;
- }
- not_passed_points.erase(iterator);
+    not_passed_points.erase(not_passed_points.begin() + ind);
 }
 
 float Traveling_Santa::probabilityToPoints(int current_point, int next_point) {
