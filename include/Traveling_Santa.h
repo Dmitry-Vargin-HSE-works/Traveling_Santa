@@ -51,6 +51,9 @@ public:
 
 
     void setBestWay(Path path); //// D
+
+    vector<float> getChances(int last_point);
+    int getRandomPoint(vector<float> chances);
 };
 
 #endif //TRAVELING_SANTA_TRAVELING_SANTA_H

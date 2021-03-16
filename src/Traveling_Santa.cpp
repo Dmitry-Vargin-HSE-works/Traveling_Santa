@@ -65,7 +65,6 @@ Path Traveling_Santa::runAlgorithm() {
         for (int i = 0; i < this->ant_num; ++i) {
             this->first_points[i] = rand() % this->points_num;
         }
-        Path(first_points, data).printPath();
         this->paths.resize(0);
         for (int i : this->first_points) {
             this->passed_points.resize(1);
@@ -122,6 +121,60 @@ int Traveling_Santa::randomPoint(vector<float> probability_roulette) {
 }
 
 void Traveling_Santa::goToNextPoint() {
+    /// ничего не берет
+    /// должна убирать рандомную точку из not_passed_points
+    /// и добавлять ее в конец passed_points
+    int last_point = this->passed_points[this->passed_points.size()-1];
+
+    vector<float> chances = this->getChances(last_point);
+    int new_point = this->getRandomPoint(chances);
+
+    this->passed_points.push_back(new_point);
+    for (int i = 0; i < this->not_passed_points.size(); ++i) {
+        if (this->not_passed_points[i] == new_point) {
+            this->not_passed_points.erase(this->not_passed_points.begin() + i);
+            break;
+        }
+    }
+}
+
+vector<float> Traveling_Santa::getChances(int last_point) {
+    vector<float> chances; chances.resize(this->data.size());
+    double sum = 0.0;
+    for (auto i : this->passed_points) {
+        chances[i] = 0.0f;
+    }
+    for (auto i : this->not_passed_points) {
+        chances[i] = pow(this->data[last_point][i].second, this->a) /
+                pow(this->data[last_point][i].first, this->b);
+        sum += chances[i];
+    }
+    for (float & chance : chances) {
+        chance /= sum;
+    }
+    return chances;
+}
+
+int Traveling_Santa::getRandomPoint(vector<float> chances) {
+    float rand_value = 1.0 * rand() / RAND_MAX;
+    for (int i = 0; i < chances.size(); ++i) {
+        for (int j = 0; j < i; ++j) {
+            chances[i] += chances[j];
+        }
+    }
+    if (rand_value <= chances[0]) {
+        return 0;
+    }
+    for (int i = 0; i < chances.size()-1; ++i) {
+        if (chances[i] < rand_value && rand_value <= chances[i+1])
+            return i+1;
+    }
+    return 0;
+    throw "Point was not found!";
+}
+
+/*
+void Traveling_Santa::goToNextPoint() {
   int current_point = passed_points[passed_points.size() - 1]; // текущая точка
   vector<float> probability_roulette; // "рулетка выбора"
 
@@ -161,3 +214,4 @@ float Traveling_Santa::probabilityToPoints(int current_point, int next_point) {
                           * pow(data[current_point][next_point].first, b);
   return probability_to_points;
 }
+ */

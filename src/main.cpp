@@ -3,8 +3,9 @@
 
 int main() {
     srand(time(NULL));
+
     Traveling_Santa ts;
     ts.readData("cities.csv");
     ts.runAlgorithm();
-    return 0;
+     return 0;
 }
